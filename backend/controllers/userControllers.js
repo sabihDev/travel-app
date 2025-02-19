@@ -42,4 +42,38 @@ const register= async(req, res)=>{
     });
 }
 
-module.exports ={register};
+const login = async(req,res)=>{
+    const { email,password} = req.body;
+
+    if( !email || !password){
+        return res.status(400).json({error:true,message:"All fields are required"});
+    }
+
+    const user = await userModel.findOne({email});
+    if(!user){
+        return res.status(400).json({error:true,message:"User not found"});
+    }
+
+    const isPasswordValid =await bcrypt.compare(password,user.password);
+    if(!isPasswordValid){
+        return res.status(400).json({error:true,message:"Invalid Credentials"});
+    }
+
+    const accessToken = jwt.sign(
+        {userId: user._id},
+        process.env.JWT_SECRET,
+        {
+            expiresIn:"72h"
+        }
+    );
+
+    return res.status(201).json({
+        error:false,
+        user:{fullName:user.fullName, email:user.email},
+        accessToken,
+        message:"Login Successfull"
+    });
+
+}
+
+module.exports ={register, login};
