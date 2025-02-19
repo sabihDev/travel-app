@@ -76,4 +76,16 @@ const login = async(req,res)=>{
 
 }
 
-module.exports ={register, login};
+const getUser= async(req,res)=>{
+    const {userId} =req.user;
+
+    const isUser= await userModel.findOne({_id:userId});
+    if(!isUser) return res.sendStatus(401);
+
+    return res.json({
+        user:isUser,
+        messages:""
+    });
+}
+
+module.exports ={register, login, getUser};
