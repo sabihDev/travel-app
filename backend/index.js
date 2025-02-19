@@ -6,7 +6,8 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const express = require("express");
 const cors = require("cors");
-const userRoutes = require("./routes/userRoutes.js")
+const userRoutes = require("./routes/userRoutes.js");
+const travelStoryRoutes = require("./routes/travelStoryRoutes.js");
 
 const jwt = require("jsonwebtoken");
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(cors({origin:"*"}));
 
 app.use('/api/user', userRoutes);
+app.use('/api/travel-story', travelStoryRoutes)
 
 app.listen(8000);
 module.exports = app;
