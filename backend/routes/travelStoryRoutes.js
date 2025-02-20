@@ -1,5 +1,5 @@
 const express = require("express");
-const { addTravelStory, getAllStories, imageUpload } = require("../controllers/travelStoryControllers");
+const { addTravelStory, getAllStories, imageUpload, } = require("../controllers/travelStoryControllers");
 const { authenticateToken } = require("../utilities");
 const {upload} = require("../multer");
 const fs = require("fs");
