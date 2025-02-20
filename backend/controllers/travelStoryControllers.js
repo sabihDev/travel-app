@@ -1,4 +1,6 @@
 const TravelStory = require("../models/travelStory.model");
+const fs = require("fs");
+const path = require('path');
 
 const addTravelStory = async (req, res) => {
     const { title, story, visitedLocation, imageUrl, visitedDate } = req.body;
@@ -56,4 +58,18 @@ const getAllStories = async(req, res)=>{
     }
 }
 
-module.exports = { addTravelStory, getAllStories };
+const imageUpload = async(req,res)=>{
+    try{
+        if(!req.file){
+            return res.status(400).json({error:true, message:"No image uploaded"});
+        }
+
+        const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`;
+        res.status(201).json({imageUrl});
+    }
+    catch(err){
+        res.status(500).json({error:true, message:err.message});
+    }
+}
+
+module.exports = { addTravelStory, getAllStories, imageUpload };
