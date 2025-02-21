@@ -105,4 +105,37 @@ const editTravelStory = async(req, res)=>{
     }
 }
 
-module.exports = { addTravelStory, getAllStories, imageUpload, editTravelStory };
+const deleteStory = async (req, res) => {
+    const { id } = req.params;
+    const { userId } = req.user;
+
+    try {
+        const travelStory = await TravelStory.findOne({ _id: id, userId });
+
+        if (!travelStory) {
+            return res.status(400).json({ error: true, message: "Story not found" });
+        }
+
+        // Delete the travel story from the database
+        await TravelStory.findByIdAndDelete(id);
+
+        // Delete the image file
+        const imageUrl = travelStory.imageUrl;
+        if (imageUrl) {
+            const filename = path.basename(imageUrl);
+            const filePath = path.join(__dirname, "../uploads", filename);
+
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    console.error("Failed to delete image file:", err);
+                }
+            });
+        }
+
+        return res.status(200).json({ error: false, message: "Travel story deleted successfully" });
+    } catch (err) {
+        return res.status(400).json({ error: true, message: err.message });
+    }
+};
+
+module.exports = { addTravelStory, getAllStories, imageUpload, editTravelStory, deleteStory };
