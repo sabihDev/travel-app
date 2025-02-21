@@ -1,5 +1,5 @@
 const express = require("express");
-const { addTravelStory, getAllStories, imageUpload, editTravelStory, deleteStory, updateFavoriteById, } = require("../controllers/travelStoryControllers");
+const { addTravelStory, getAllStories, imageUpload, editTravelStory, deleteStory, updateFavoriteById, searchStory, } = require("../controllers/travelStoryControllers");
 const { authenticateToken } = require("../utilities");
 const {upload} = require("../multer");
 
@@ -11,5 +11,6 @@ router.post('/image-upload', upload.single("image"), imageUpload);
 router.post("/edit/:id", authenticateToken, editTravelStory);
 router.delete("/delete/:id", authenticateToken, deleteStory);
 router.put("/update-favorite/:id", authenticateToken, updateFavoriteById);
+router.get("/search", authenticateToken, searchStory);
 
 module.exports = router

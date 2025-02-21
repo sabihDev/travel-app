@@ -160,4 +160,26 @@ const updateFavoriteById = async(req, res) =>{
     }
 }
 
-module.exports = { addTravelStory, getAllStories, imageUpload, editTravelStory, deleteStory, updateFavoriteById };
+const searchStory = async(req, res) =>{
+    const {query} = req.query;
+    const {userId} = req.user;
+
+    if(!query) return res.status(400).json({error:true, message:"Query is required"});
+
+    try {
+        const searchResults = await TravelStory.find({
+            userId,
+            $or: [
+                {title: {$regex:query, $options:"i"} },
+                {story: {$regex:query, $options:"i"} },
+                {visitedLocation: {$regex:query, $options:"i"} },
+            ],
+        }).sort({isFavorite:-1});
+
+        res.status(200).json({error:false, stories: searchResults});
+    } catch (err) {
+        res.status(400).json({error:true, message:error.message});
+    }
+}
+
+module.exports = { addTravelStory, getAllStories, imageUpload, editTravelStory, deleteStory, updateFavoriteById, searchStory };
