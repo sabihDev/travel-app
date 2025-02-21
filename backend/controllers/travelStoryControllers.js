@@ -182,4 +182,23 @@ const searchStory = async(req, res) =>{
     }
 }
 
-module.exports = { addTravelStory, getAllStories, imageUpload, editTravelStory, deleteStory, updateFavoriteById, searchStory };
+const filterDateSearch = async(req, res)=>{
+    const {startDate, endDate} = req.query;
+    const {userId} = req.user;
+
+    try {
+        const parsedStartDate = new Date(parseInt(startDate));
+        const parsedEndDate = new Date(parseInt(endDate));
+
+        const filteredStories = await TravelStory.find({
+            userId,
+            visitedDate: { $gte: parsedStartDate, $lte: parsedEndDate }
+        }).sort({ isFavorite: -1 });
+
+        res.status(200).json({error:false, stories:filteredStories});
+    } catch (err) {
+        res.status(400).json({error:true, message:err.message});
+    }
+}
+
+module.exports = { addTravelStory, getAllStories, imageUpload, editTravelStory, deleteStory, updateFavoriteById, searchStory, filterDateSearch };
