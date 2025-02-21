@@ -72,4 +72,37 @@ const imageUpload = async(req,res)=>{
     }
 }
 
-module.exports = { addTravelStory, getAllStories, imageUpload };
+const editTravelStory = async(req, res)=>{
+    const {id} = req.params;
+    const {title, story, visitedLocation, imageUrl, visitedDate} = req.body;
+    const {userId} = req.user;
+
+    if(!title || !story || !visitedLocation || !imageUrl || !visitedDate){
+        return res.status(400).json({error:true, message:"All fields are required"});
+    }
+
+    const parsedVisitedDate = new Date(parseInt(visitedDate));
+
+    try {
+        const travelStory = await TravelStory.findOne({_id:id, userId});
+
+        if(!travelStory){
+            return res.status(400).json({error:true, message:"Story not found"});
+        }
+
+        const placeholderImage = `http://localhost:8000/assets/images.png`;
+
+        travelStory.title = title;
+        travelStory.story = story;
+        travelStory.visitedLocation = visitedLocation;
+        travelStory.imageUrl = imageUrl || placeholderImage;
+        travelStory.visitedDate = parsedVisitedDate;
+
+        await travelStory.save();
+        return res.status(200).json({error:false, message:"Story Updated Successfully"});
+    } catch (err) {
+        return res.status(400).json({error:true, message:err.message});
+    }
+}
+
+module.exports = { addTravelStory, getAllStories, imageUpload, editTravelStory };
