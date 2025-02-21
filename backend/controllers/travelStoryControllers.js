@@ -138,4 +138,26 @@ const deleteStory = async (req, res) => {
     }
 };
 
-module.exports = { addTravelStory, getAllStories, imageUpload, editTravelStory, deleteStory };
+const updateFavoriteById = async(req, res) =>{
+    const {id} = req.params;
+    const {isFavorite} = req.body;
+    const {userId} = req.user;
+
+    try{
+        const travelStory = await TravelStory.findOne({_id:id, userId});
+
+        if(!travelStory){
+            return res.status(400).json({error:true, message:"Story not found"});
+        }
+
+        travelStory.isFavorite = isFavorite;
+
+        await travelStory.save();
+        res.status(200).json({story:travelStory, message:"Update Successfull"});
+    }
+    catch(err){
+        res.status(200).json({error:true, message:err.message});
+    }
+}
+
+module.exports = { addTravelStory, getAllStories, imageUpload, editTravelStory, deleteStory, updateFavoriteById };
