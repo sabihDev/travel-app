@@ -1,15 +1,32 @@
 import React, { useState } from "react";
 import PasswordInput from "../../components/Input/PasswordInput";
 import { useNavigate } from "react-router-dom";
+import { validateEmail } from "../../utils/helper";
 
 const Login = () => {
   const [email, setEmail] = useState("");
-  const [passsord, setPassword] = useState("");
+  const [password, setPassword] = useState(""); // ✅ Fixed typo
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
 
-  const handleLogin = () => {};
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    if (!validateEmail(email)) {
+      
+      setError("Please enter a valid email address"); // ✅ Logs error immediately
+      return;
+    };
+
+    if(!password){
+      setError("Please enter the password"); // ✅ Logs error immediately
+      return;
+    }
+
+    setError("");
+  };
+
   return (
     <div className="h-screen bg-cyan-100 overflow-hidden relative">
       <div className="login-ui-box right-10 -top-40" />
@@ -29,34 +46,34 @@ const Login = () => {
         </div>
 
         <div className="w-1.5/4 h-[70vh] bg-white p-16 rounded-r-lg shadow-lg z-10 shadow-cyan-200/20">
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleLogin} id="LoginForm">
             <h4 className="text-2xl font-semibold mb-7">Login</h4>
 
             <input
-              type="email"
+              type="text"
               value={email}
-              onChange={(target) => setEmail(target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Email"
               className="input-box"
             />
 
             <PasswordInput
-              value={passsord}
-              onChange={(target) => setPassword(target.value)}
+              value={password} // ✅ Ensured controlled component
+              onChange={(e) => setPassword(e.target.value)}
             />
 
+            {error ? (<p className="text-red-500 text-sm pb-1">{error}</p>):"  "} {/* ✅ Display error */}
+
             <button type="submit" className="btn-primary">
-              Login
+              LOGIN
             </button>
 
             <p className="text-xs text-slate-500 text-center my-4">Or</p>
 
             <button
-              type="submit"
+              type="button" // ✅ Prevents accidental form submission
               className="btn-primary btn-light"
-              onClick={() => {
-                navigate("/signup");
-              }}
+              onClick={() => navigate("/signup")}
             >
               CREATE ACCOUNT
             </button>
