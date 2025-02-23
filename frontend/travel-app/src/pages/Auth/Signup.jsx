@@ -7,7 +7,7 @@ import axiosInstance from "../../utils/axiosInstance";
 const Signup = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState(""); // ✅ Fixed typo
+  const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
@@ -15,38 +15,39 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
 
-    if (!validateEmail(email)) {
-      
-      setError("Please enter a valid email address"); // ✅ Logs error immediately
+    if (!name.trim()) {
+      setError("Please enter your full name.");
       return;
-    };
+    }
 
-    if(!password){
-      setError("Please enter the password"); // ✅ Logs error immediately
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    if (!password.trim()) {
+      setError("Please enter a password.");
       return;
     }
 
     setError("");
 
-    // api call
     try {
-      
-      const response = await axiosInstance.post("/api/user/Signup",{
-        email: email,
-        password: password,
+      const response = await axiosInstance.post("/api/user/register", {
+        fullName: name,
+        email,
+        password,
       });
 
-      if(response.data && response.data.accessToken){
+      if (response.data && response.data.accessToken) {
         localStorage.setItem("token", response.data.accessToken);
         navigate("/dashboard");
       }
     } catch (error) {
-      if(error.response && error.response.data && error.response.data.message){
-        setError(error.response.data.message);
-      }
-      else{
-        setError("An unexpected error occurred. Please try again");
-      }
+      setError(
+        error.response?.data?.message ||
+          "An unexpected error occurred. Please try again."
+      );
     }
   };
 
@@ -56,19 +57,21 @@ const Signup = () => {
       <div className="login-ui-box bg-cyan-200 right-1/2 -bottom-40" />
 
       <div className="container h-screen flex items-center justify-center mx-auto">
-        <div className="w-[39%] h-[80vh] flex items-end bg-signup-bg-img bg-cover bg-center rounded-lg p-10 z-50">
+        {/* Left Side */}
+        <div className="w-2/5 h-[80vh] flex items-end bg-signup-bg-img bg-cover bg-center rounded-lg p-10 z-50">
           <div>
             <h4 className="text-5xl text-white font-semibold leading-[58px]">
               Every Journey <br /> Tells A Story
             </h4>
             <p className="text-[15px] text-white leading-6 pr-7 mt-4">
-              Transform your adventures into timeless memories. <br /> Share
+              Transform your adventures into timeless memories. Share
               your world, one destination at a time.
             </p>
           </div>
         </div>
 
-        <div className="w-[34%] h-[70vh] bg-white p-16 rounded-r-lg shadow-lg z-10 shadow-cyan-200/20">
+        {/* Signup Form */}
+        <div className="w-2/5 h-[70vh] bg-white p-16 rounded-r-lg shadow-lg z-10 shadow-cyan-200/20">
           <form onSubmit={handleSignup} id="SignupForm">
             <h4 className="text-2xl font-semibold mb-7">Signup</h4>
 
@@ -89,20 +92,20 @@ const Signup = () => {
             />
 
             <PasswordInput
-              value={password} // ✅ Ensured controlled component
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
 
-            {error ? (<p className="text-red-500 text-sm pb-1">{error}</p>):"  "} {/* ✅ Display error */}
+            {error && <p className="text-red-500 text-sm pb-1">{error}</p>}
 
             <button type="submit" className="btn-primary">
-              SIGNUP
+              SIGN UP
             </button>
 
             <p className="text-xs text-slate-500 text-center my-4">Or</p>
 
             <button
-              type="button" // ✅ Prevents accidental form submission
+              type="button"
               className="btn-primary btn-light"
               onClick={() => navigate("/login")}
             >
