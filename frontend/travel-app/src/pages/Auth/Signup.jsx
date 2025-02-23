@@ -61,11 +61,11 @@ const Signup = () => {
         <div className="w-2/5 h-[80vh] flex items-end bg-signup-bg-img bg-cover bg-center rounded-lg p-10 z-50">
           <div>
             <h4 className="text-5xl text-white font-semibold leading-[58px]">
-              Every Journey <br /> Tells A Story
+              Join the <br /> Adventure
             </h4>
             <p className="text-[15px] text-white leading-6 pr-7 mt-4">
-              Transform your adventures into timeless memories. Share
-              your world, one destination at a time.
+              Create an account to start preserving your travels and 
+              your memories in your personal travel journal.
             </p>
           </div>
         </div>
