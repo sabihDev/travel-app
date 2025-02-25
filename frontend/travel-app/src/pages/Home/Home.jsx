@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../../components/Navbar';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
+import TravelStoryCard from '../../components/Cards/TravelStoryCard';
 
 const Home = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
+  const [allStories, setAllStories] = useState([]);
 
+  // Get information of logged-in user
   const getUserInfo = async () => {
     try {
       console.log("Fetching user info..."); // Debugging
@@ -14,10 +17,8 @@ const Home = () => {
 
       if (response.data?.user) {
         setUserInfo(response.data.user);
-        console.log(userInfo);
+        console.log("User info set:", response.data.user);
       }
-
-
     } catch (error) {
       if (error.response?.status === 400) {
         localStorage.clear();
@@ -26,20 +27,63 @@ const Home = () => {
     }
   };
 
+  // Get all travel stories API function
+  const getAllTravelStories = async () => {
+    try {
+      console.log("Fetching all travel stories...");
+      const response = await axiosInstance.get("/api/travel-story/getall");
+
+      if (response.data?.stories) {
+        setAllStories(response.data.stories);
+      }
+    } catch (error) {
+      console.log("An unexpected error occurred. Please try again");
+    }
+  };
+
   useEffect(() => {
     getUserInfo();
+    getAllTravelStories();
+  }, []); // Runs only on mount
 
-    return () =>{
-    }
-  }, []); // Empty dependency array ensures this runs only on mount
+  // Debugging: Log when `allStories` updates
+  useEffect(() => {
+    console.log("Updated allStories:", allStories);
+  }, [allStories]);
 
   return (
     <>
       <Navbar userInfo={userInfo} />
       <div className="container mx-auto py-10">
         <div className="flex gap-7">
-          <div className="flex-1"></div>
-
+          <div className="flex-1">
+            {
+              allStories.length > 0 ? (
+                <div className="grid grid-cols-2 gap-4">
+                  {
+                    allStories.map((item) => {
+                      return (
+                        <TravelStoryCard
+                          key={item._id}
+                          imgUrl={item.imageUrl}
+                          title={item.tiltle}
+                          story={item.story}
+                          date={item.visitedDate}
+                          visitedLocation={item.visitedLocation}
+                          isFavorite={item.isFavorite}
+                          onEdit={() => handleEdit(item)}
+                          onClick={() => viewTravelStory(item)}
+                          onFavoriteClick={() => updateIsFavorite(item)}
+                        />
+                      );
+                    })
+                  }
+                </div>
+              ) : (
+                <>You have not created any story.</>
+              )
+            }
+          </div>
           <div className="w-[320px]"></div>
         </div>
       </div>
@@ -48,4 +92,3 @@ const Home = () => {
 };
 
 export default Home;
-
