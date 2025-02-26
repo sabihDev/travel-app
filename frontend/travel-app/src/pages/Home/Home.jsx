@@ -41,6 +41,22 @@ const Home = () => {
     }
   };
 
+  // Function to edit story
+  const handleEdit = (data) =>{
+
+  }
+
+  // Function to view story
+  const viewTravelStory = (data) =>{
+
+  }
+
+  // Function to toggle favorite/unfavorite story
+  const uodateIsFavorite = (data) =>{
+
+  }
+
+
   useEffect(() => {
     getUserInfo();
     getAllTravelStories();
@@ -66,7 +82,7 @@ const Home = () => {
                         <TravelStoryCard
                           key={item._id}
                           imgUrl={item.imageUrl}
-                          title={item.tiltle}
+                          title={item.title}
                           story={item.story}
                           date={item.visitedDate}
                           visitedLocation={item.visitedLocation}
