@@ -42,19 +42,45 @@ const Home = () => {
   };
 
   // Function to edit story
-  const handleEdit = (data) =>{
+  const handleEdit = (data) => {
 
   }
 
   // Function to view story
-  const viewTravelStory = (data) =>{
+  const viewTravelStory = (data) => {
 
   }
 
   // Function to toggle favorite/unfavorite story
-  const uodateIsFavorite = (data) =>{
+  const updateIsFavorite = async (story) => {
+    try {
+      // Optimistically update the UI
+      console.log(story.isFavorite);
+      
 
-  }
+      // API call to update favorite status
+      const response = await axiosInstance.put(`/api/travel-story/update-favorite/${story._id}`, {
+        isFavorite: !story.isFavorite,
+      });
+
+
+
+      if (response.data.story) {
+        getAllTravelStories();
+      }
+
+      console.log(story.isFavorite);
+
+    } catch (error) {
+      console.error("Error updating favorite status:", error?.response?.data || error);
+      // Revert UI change if API call fails
+      setAllStories((prevStories) =>
+        prevStories.map((s) =>
+          s._id === story._id ? { ...s, isFavorite: story.isFavorite } : s
+        )
+      );
+    }
+  };
 
 
   useEffect(() => {
