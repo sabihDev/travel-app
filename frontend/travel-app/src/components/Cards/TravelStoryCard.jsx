@@ -41,7 +41,7 @@ const TravelStoryCard = ({
 
                 <p className="text-xs text-slate-600 mt-2">{story?.slice(0, 60)}</p>
 
-                <div className="inline-flex items-center gap-2 text-[13px] text-cyan-600 bg-cyan-200/40 rounded mt-3 px-2 py-1">
+                <div className="inline-flex items-center gap-2 text-[13px] text-cyan-600 bg-cyan-200/40 rounded mt-3 px-2 py-1 border border-cyan-600">
                     <FaLocationDot  className="text-sm" />
                     {visitedLocation.map((location, index) => (
                         <span key={index}>{location}</span>
