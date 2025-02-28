@@ -1,6 +1,6 @@
 import React from "react";
-import moment from "moment/moment"
-import { FaHeart, FaLocationDot  } from "react-icons/fa6";
+import moment from "moment/moment";
+import { FaHeart, FaLocationDot } from "react-icons/fa6";
 
 const TravelStoryCard = ({
     imgUrl,
@@ -25,8 +25,13 @@ const TravelStoryCard = ({
                 alt={title}
             />
 
-            <button className="w-12 h-12 flex items-center justify-center bg-white/40 rounded-lg border border-white/30 absolute top-4 right-4" onClick={onFavoriteClick}>
-                <FaHeart className={`icon-btn ${isFavorite ? "text-red-500" : "text-white"}`}/>
+            <button
+                className="w-12 h-12 flex items-center justify-center bg-white/40 rounded-lg border border-white/30 absolute top-4 right-4"
+                onClick={onFavoriteClick}
+            >
+                <FaHeart
+                    className={`icon-btn ${isFavorite ? "text-red-500" : "text-white"}`}
+                />
             </button>
 
             <div className="p-4" onClick={onClick}>
@@ -41,12 +46,14 @@ const TravelStoryCard = ({
 
                 <p className="text-xs text-slate-600 mt-2">{story?.slice(0, 60)}</p>
 
-                <div className="inline-flex items-center gap-2 text-[13px] text-cyan-600 bg-cyan-200/40 rounded mt-3 px-2 py-1 border border-cyan-600">
-                    <FaLocationDot  className="text-sm" />
-                    {visitedLocation.map((location, index) => (
-                        <span key={index}>{location}</span>
-                    ))}
-                </div>
+                {visitedLocation.map((location, index) => (
+                    <>
+                        <div className="inline-flex items-center mr-2 gap-2 text-[13px] text-cyan-600 bg-cyan-200/40 rounded mt-3 px-2 py-1 border border-cyan-600">
+                            <FaLocationDot className="text-sm" />
+                            <span key={index}>{location}</span>
+                        </div>
+                    </>
+                ))}
             </div>
         </div>
     );
