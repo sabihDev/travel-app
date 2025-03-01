@@ -186,7 +186,7 @@ const AddEditTravelStory = ({
             setImage={setStoryImage}
             handleDeleteImage={handleDeleteStoryImg}
           />
-
+          {}
           <div className="flex flex-col gap-2 mt-4">
             <label className="input-label">STORY</label>
             <textarea
