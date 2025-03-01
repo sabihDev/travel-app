@@ -190,7 +190,9 @@ const Home = () => {
           storyInfo={openViewModal.data || null}
           onEditClick={()=>{}}
           onDeleteClick={()=>{}}
-          onClose={() =>{}}
+          onClose={() =>{
+            setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
+          }}
         />
       </Modal>
 
