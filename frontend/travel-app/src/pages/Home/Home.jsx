@@ -12,6 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import Modal from "react-modal";
 import AddEditTravelStory from "./AddEditTravelStory";
+import ViewTravelStory from "./ViewTravelStory";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -21,6 +22,11 @@ const Home = () => {
   const [openAddEditModal, setOpenAddEditModal] = useState({
     isShown: false,
     type: "add",
+    data: null,
+  });
+
+  const [openViewModal, setOpenViewModal] = useState({
+    isShown: false,
     data: null,
   });
 
@@ -60,7 +66,12 @@ const Home = () => {
   const handleEdit = (data) => {};
 
   // Function to view story
-  const viewTravelStory = (data) => {};
+  const viewTravelStory = (data) => {
+    setOpenViewModal({
+      isShown: true,
+      data,
+    });
+  };
 
   // Function to toggle favorite/unfavorite story
   const updateIsFavorite = async (story) => {
@@ -159,6 +170,27 @@ const Home = () => {
             setOpenAddEditModal({ isShown: false, type: "add", data: null });
           }}
           getAllTravelStories={getAllTravelStories}
+        />
+      </Modal>
+
+      {/* View Modal */}
+      <Modal
+        isOpen={openViewModal.isShown}
+        onRequestClose={() => {}}
+        style={{
+          overlay: {
+            background: "rgba(0,0,0,0.2)",
+            zIndex: 999,
+          },
+        }}
+        appElement={document.getElementById("root")}
+        className="modal-box"
+      >
+        <ViewTravelStory
+          storyInfo={openViewModal.data || null}
+          onEditClick={()=>{}}
+          onDeleteClick={()=>{}}
+          onClose={() =>{}}
         />
       </Modal>
 

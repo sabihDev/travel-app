@@ -91,7 +91,7 @@ const AddEditTravelStory = ({
   };
 
   return (
-    <div>
+    <div className="relative">
       <div className="flex items-center justify-between">
         <h5 className="text-xl font-medium text-slate-700">
           {type === "add" ? "Add" : "Edit"} Travel Story
@@ -101,12 +101,12 @@ const AddEditTravelStory = ({
           <div className="flex items-center gap-3  p-2 rounded-l-lg">
             {type === "add" ? (
               <button className="btn-small" onClick={handleAddOrUpdate}>
-                <MdAdd className="text-lg" /> Add Story
+                <MdAdd className="text-lg" /> ADD STORY
               </button>
             ) : (
               <>
                 <button className="btn-small" onClick={handleAddOrUpdate}>
-                  <MdUpdate className="text-lg" /> Update Story
+                  <MdUpdate className="text-lg" /> UPDATE STORY
                 </button>
               </>
             )}
