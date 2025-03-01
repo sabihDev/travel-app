@@ -63,7 +63,13 @@ const Home = () => {
   };
 
   // Function to edit story
-  const handleEdit = (data) => {};
+  const handleEdit = (data) => {
+    setOpenAddEditModal({
+      isShown: true,
+      type: "edit",
+      data,
+    });
+  };
 
   // Function to view story
   const viewTravelStory = (data) => {
@@ -188,7 +194,10 @@ const Home = () => {
       >
         <ViewTravelStory
           storyInfo={openViewModal.data || null}
-          onEditClick={()=>{}}
+          onEditClick={()=>{
+            setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
+            handleEdit(openViewModal.data || null);
+          }}
           onDeleteClick={()=>{}}
           onClose={() =>{
             setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));

@@ -14,11 +14,11 @@ const AddEditTravelStory = ({
   onClose,
   getAllTravelStories,
 }) => {
-  const [visitedDate, setVisitedDate] = useState(null);
-  const [visitedLocation, setVisitedLocation] = useState([]);
-  const [story, setStory] = useState("");
-  const [title, setTitle] = useState("");
-  const [storyImage, setStoryImage] = useState(null);
+  const [visitedDate, setVisitedDate] = useState(storyInfo?.visitedDate || null);
+  const [visitedLocation, setVisitedLocation] = useState(storyInfo?.visitedLocation ||[]);
+  const [story, setStory] = useState(storyInfo?.story || "");
+  const [title, setTitle] = useState(storyInfo?.title || "");
+  const [storyImage, setStoryImage] = useState(storyInfo?.imageUrl || null);
 
   const [error, setError] = useState("");
 
