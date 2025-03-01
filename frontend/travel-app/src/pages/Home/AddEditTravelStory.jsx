@@ -6,7 +6,7 @@ import TagInput from "../../components/Input/TagInput";
 import moment from "moment";
 import axiosInstance from "../../utils/axiosInstance";
 import { toast } from "react-toastify";
-import uploadImage  from "../../utils/uploadImage";
+import uploadImage from "../../utils/uploadImage";
 
 const AddEditTravelStory = ({
   storyInfo,
@@ -15,7 +15,7 @@ const AddEditTravelStory = ({
   getAllTravelStories,
 }) => {
   const [visitedDate, setVisitedDate] = useState(storyInfo?.visitedDate || null);
-  const [visitedLocation, setVisitedLocation] = useState(storyInfo?.visitedLocation ||[]);
+  const [visitedLocation, setVisitedLocation] = useState(storyInfo?.visitedLocation || []);
   const [story, setStory] = useState(storyInfo?.story || "");
   const [title, setTitle] = useState(storyInfo?.title || "");
   const [storyImage, setStoryImage] = useState(storyInfo?.imageUrl || null);
@@ -44,18 +44,61 @@ const AddEditTravelStory = ({
         imageUrl: imageUrl || "",
       });
 
-      if(response.data && response.data.story){
+      if (response.data && response.data.story) {
         toast.success("Story added successfully");
 
         // Get all stories
         getAllTravelStories();
         onClose();
       }
-    } catch (error) {}
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.message) {
+        toast.error(error.response.data.message);
+      } else {
+        setError("Something went wrong. Please try again later.");
+      }
+    }
   };
 
   // edit story
-  const editTravelStory = async () => {};
+  const editTravelStory = async () => {
+    const storyId = storyInfo._id;
+    try {
+      let imageUrl = storyInfo.imageUrl || "";
+
+      // Upload new image if it's a file
+      if (storyImage && typeof storyImage === "object") {
+        const imageUploadResponse = await uploadImage(storyImage);
+        imageUrl = imageUploadResponse.imageUrl || imageUrl;
+      }
+
+      const postData = {
+        title,
+        visitedDate: visitedDate ? moment(visitedDate).valueOf() : moment().valueOf(),
+        visitedLocation,
+        story,
+        imageUrl,
+      };
+
+      // Update story using PUT method
+      const response = await axiosInstance.put(`/api/travel-story/edit/${storyId}`, postData);
+
+      if (response.data && response.data.story) {
+        toast.success("Story Updated successfully");
+
+        // Refresh travel stories
+        getAllTravelStories();
+        onClose();
+      }
+    } catch (error) {
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        setError("Something went wrong. Please try again later.");
+      }
+    }
+  };
+
 
   const handleAddOrUpdate = () => {
     console.log("Story data", {

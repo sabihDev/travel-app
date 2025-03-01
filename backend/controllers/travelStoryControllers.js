@@ -114,7 +114,7 @@ const editTravelStory = async (req, res) => {
         travelStory.visitedDate = parsedVisitedDate;
 
         await travelStory.save();
-        return res.status(200).json({ error: false, message: "Story Updated Successfully" });
+        return res.status(200).json({ error: false, message: "Story Updated Successfully", story: travelStory });
     } catch (err) {
         return res.status(400).json({ error: true, message: err.message });
     }
