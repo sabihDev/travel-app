@@ -92,7 +92,7 @@ const editTravelStory = async (req, res) => {
     const { title, story, visitedLocation, imageUrl, visitedDate } = req.body;
     const { userId } = req.user;
 
-    if (!title || !story || !visitedLocation || !imageUrl || !visitedDate) {
+    if (!title || !story || !visitedLocation || !visitedDate) {
         return res.status(400).json({ error: true, message: "All fields are required" });
     }
 

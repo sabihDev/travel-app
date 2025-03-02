@@ -72,7 +72,7 @@ const AddEditTravelStory = ({
         imageUrl = imageUploadResponse.imageUrl || imageUrl;
       }
 
-      const postData = {
+      let postData = {
         title,
         visitedDate: visitedDate ? moment(visitedDate).valueOf() : moment().valueOf(),
         visitedLocation,
@@ -130,8 +130,46 @@ const AddEditTravelStory = ({
   };
 
   const handleDeleteStoryImg = async () => {
-    setStoryImage(null);
+    try {
+      // Ensure storyInfo exists
+      if (!storyInfo || !storyInfo.imageUrl) {
+        console.error("Story information is missing.");
+        return;
+      }
+
+      // Delete the image
+      const deleteImgResponse = await axiosInstance.delete("/delete-image", {
+        params: { imageUrl: storyInfo.imageUrl },
+      });
+
+      if (deleteImgResponse.data) {
+        const storyId = storyInfo._id;
+
+        if (!storyId) {
+          console.error("Story ID is missing.");
+          return;
+        }
+
+        // Construct post data
+        let postData = {
+          title: storyInfo.title, // Ensure it's retrieved properly
+          story: storyInfo.story,
+          visitedDate: moment().valueOf(),
+          visitedLocation: storyInfo.visitedLocation,
+          imageUrl: "",
+        };
+
+        // Update story using PUT method
+        const response = await axiosInstance.put(`/api/travel-story/edit/${storyId}`, postData);
+
+        setStoryImage(null);
+      }
+    } catch (error) {
+      console.error("Error deleting image or updating story:", error);
+    }
   };
+
+
 
   return (
     <div className="relative">
@@ -186,7 +224,7 @@ const AddEditTravelStory = ({
             setImage={setStoryImage}
             handleDeleteImage={handleDeleteStoryImg}
           />
-          {}
+          { }
           <div className="flex flex-col gap-2 mt-4">
             <label className="input-label">STORY</label>
             <textarea
