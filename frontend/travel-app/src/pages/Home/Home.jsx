@@ -156,7 +156,7 @@ const Home = () => {
             {allStories.length > 0 ? (
               <div className="grid grid-cols-2 gap-4">
                 {allStories.map((item) => {
-                  return (
+                    return (
                     <TravelStoryCard
                       key={item._id}
                       imgUrl={item.imageUrl}
@@ -169,11 +169,11 @@ const Home = () => {
                       onClick={() => viewTravelStory(item)}
                       onFavoriteClick={() => updateIsFavorite(item)}
                     />
-                  );
-                })}
-              </div>
-            ) : (
-              <EmptyCard/>
+                    );
+                  })}
+                  </div>
+                ) : (
+              <EmptyCard  message={`Start creating your first Travel Story! Click 'Add' Button to jot down your thoughts, ideas and memories. Let's get started!`}/>
             )}
           </div>
           <div className="w-[320px]"></div>
