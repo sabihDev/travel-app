@@ -13,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Modal from "react-modal";
 import AddEditTravelStory from "./AddEditTravelStory";
 import ViewTravelStory from "./ViewTravelStory";
+import EmptyCard from "../../components/Cards/EmptyCard";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -113,6 +114,29 @@ const Home = () => {
     }
   };
 
+  // Delete Travel Story
+  const deleteTravelStory = async (story) => {
+    if (!story || !story._id) {
+      toast.error("Invalid story data. Unable to delete.");
+      return;
+    }
+
+    const storyId = story._id;
+
+    try {
+      const response = await axiosInstance.delete(`/api/travel-story/delete/${storyId}`);
+
+      if (response.data.message === "Travel story deleted successfully") {
+        toast.error("Story deleted successfully");
+        setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
+        getAllTravelStories(); // Ensure the latest stories are fetched
+      }
+    } catch (error) {
+      toast.error("An error occurred while deleting the story. Please try again.");
+    }
+  };
+
+
   useEffect(() => {
     getUserInfo();
     getAllTravelStories();
@@ -120,7 +144,7 @@ const Home = () => {
 
   // Debugging: Log when `allStories` updates
   useEffect(() => {
-    console.log("Updated allStories:", allStories);
+    console.log("Updated allStories:");
   }, [allStories]);
 
   return (
@@ -149,7 +173,7 @@ const Home = () => {
                 })}
               </div>
             ) : (
-              <>You have not created any story.</>
+              <EmptyCard/>
             )}
           </div>
           <div className="w-[320px]"></div>
@@ -159,7 +183,7 @@ const Home = () => {
       {/* Add/Edit Modal */}
       <Modal
         isOpen={openAddEditModal.isShown}
-        onRequestClose={() => {}}
+        onRequestClose={() => { }}
         style={{
           overlay: {
             background: "rgba(0,0,0,0.2)",
@@ -180,9 +204,9 @@ const Home = () => {
       </Modal>
 
       {/* View Modal */}
-      <Modal
+      {openViewModal.isShown && <Modal
         isOpen={openViewModal.isShown}
-        onRequestClose={() => {}}
+        onRequestClose={() => { }}
         style={{
           overlay: {
             background: "rgba(0,0,0,0.2)",
@@ -194,16 +218,18 @@ const Home = () => {
       >
         <ViewTravelStory
           storyInfo={openViewModal.data || null}
-          onEditClick={()=>{
+          onEditClick={() => {
             setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
             handleEdit(openViewModal.data || null);
           }}
-          onDeleteClick={()=>{}}
-          onClose={() =>{
+          onDeleteClick={() => {
+            deleteTravelStory(openViewModal.data || null);
+          }}
+          onClose={() => {
             setOpenViewModal((prevState) => ({ ...prevState, isShown: false }));
           }}
         />
-      </Modal>
+      </Modal>}
 
       <button
         className="w-16 h-16 flex items-center justify-center bg-primary hover:bg-cyan-400 rounded-full fixed right-10 bottom-10"
