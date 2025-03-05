@@ -17,6 +17,7 @@ import EmptyCard from "../../components/Cards/EmptyCard";
 import { DayPicker } from "react-day-picker";
 import moment from "moment";
 import FilterInfoTitle from "../../components/Cards/FilterInfoTitle";
+import { getEmptyCardMessage } from "../../utils/helper";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -274,7 +275,8 @@ const Home = () => {
               </div>
             ) : (
               <EmptyCard
-                message={`Start creating your first Travel Story! Click 'Add' Button to jot down your thoughts, ideas and memories. Let's get started!`}
+                message={getEmptyCardMessage(filterType)}
+                imgSrc={filterType}
               />
             )}
           </div>
