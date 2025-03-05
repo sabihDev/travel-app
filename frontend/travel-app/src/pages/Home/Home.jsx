@@ -16,6 +16,7 @@ import ViewTravelStory from "./ViewTravelStory";
 import EmptyCard from "../../components/Cards/EmptyCard";
 import { DayPicker } from "react-day-picker";
 import moment from "moment";
+import FilterInfoTitle from "../../components/Cards/FilterInfoTitle";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -104,7 +105,15 @@ const Home = () => {
 
       if (response.data.story) {
         toast.success("Favorite status updated successfully");
+        if(filterType === "search" && searchQuery){
+          onSearchStory(searchQuery);
+        }
+        else if(filterType === "date"){
+          filterStoriesByDate(dateRange);
+        }
+        else{
         getAllTravelStories();
+        }
       }
 
       console.log(story.isFavorite);
@@ -180,21 +189,22 @@ const Home = () => {
       const startDate = day.from ? moment(day.from).valueOf() : null;
       const endDate = day.to ? moment(day.to).valueOf() : null;
 
-      if(startDate && endDate) {
-        const response = await axiosInstance.get(`/api/travel-story/filter/date`, {
-          params: {
-            startDate,
-            endDate,
-          },
-        });
+      if (startDate && endDate) {
+        const response = await axiosInstance.get(
+          `/api/travel-story/filter/date`,
+          {
+            params: {
+              startDate,
+              endDate,
+            },
+          }
+        );
 
         if (response.data.stories) {
           setFilterType("date");
           setAllStories(response.data.stories);
         }
-
       }
-
     } catch (error) {
       console.log("An error occurred while filtering stories by date.");
     }
@@ -204,6 +214,13 @@ const Home = () => {
   const handleDayClick = async (day) => {
     setDateRange(day);
     filterStoriesByDate(day);
+  };
+
+  // Reset Filter
+  const resetFilter = () => {
+    setDateRange({ from: null, to: null });
+    setFilterType("");
+    getAllTravelStories();
   };
 
   useEffect(() => {
@@ -226,10 +243,13 @@ const Home = () => {
         handleClearSearch={handleClearSearch}
       />
       <div className="container mx-auto py-10">
-
-        <FilterIbfoTitle filterType={filterType} filterDates={dateRange} onClear={()=>{
-          resetFilter();
-        }} />
+        <FilterInfoTitle
+          filterType={filterType}
+          filterDates={dateRange}
+          onClear={() => {
+            resetFilter();
+          }}
+        />
 
         <div className="flex gap-7">
           <div className="flex-1">
@@ -277,7 +297,7 @@ const Home = () => {
       {/* Add/Edit Modal */}
       <Modal
         isOpen={openAddEditModal.isShown}
-        onRequestClose={() => { }}
+        onRequestClose={() => {}}
         style={{
           overlay: {
             background: "rgba(0,0,0,0.2)",
@@ -301,7 +321,7 @@ const Home = () => {
       {openViewModal.isShown && (
         <Modal
           isOpen={openViewModal.isShown}
-          onRequestClose={() => { }}
+          onRequestClose={() => {}}
           style={{
             overlay: {
               background: "rgba(0,0,0,0.2)",
