@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { MdAdd, MdClose, MdDeleteOutline, MdUpdate } from "react-icons/md";
 import DateSelector from "../../components/Input/DateSelector";
-import ImageSelector from "../../components/ImageSelector";
+import ImageSelector from "../../components/Input/ImageSelector";
 import TagInput from "../../components/Input/TagInput";
 import moment from "moment";
 import axiosInstance from "../../utils/axiosInstance";
